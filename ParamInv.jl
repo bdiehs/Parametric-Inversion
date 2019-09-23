@@ -1,3 +1,7 @@
+module ParamInv
+
+export invert_prog, compile_prog
+
 known_inversions = Dict()
 known_contractions = Dict()
 
@@ -57,7 +61,7 @@ known_contractions[square] = square_contr
 known_contractions[dupl1] = dupl_contr(1)
 known_contractions[dupl2] = dupl_contr(2)
 known_contractions[prod] = prod_contr
-known_contractions[twice] = twice_inv
+known_contractions[twice] = twice_contr
 
 struct FuncExpr
 	vars::Array{Symbol}
@@ -185,3 +189,4 @@ prog4_inv = invert_prog(prog4, in4, out4)
 x, y = prog4_inv([9], [0, 0, 1, 0, [1, 0], 1, 4, 1])
 println(compile_prog(prog4, in4, out4)([x, y]))
 
+end
