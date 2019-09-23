@@ -1,0 +1,4 @@
+name = "ParametricInversion"
+uuid = "c55f73b3-3882-43cd-b2f9-a57faea6b11b"
+authors = ["Christian Altamirano <bdiehs@mit.edu>"]
+version = "0.1.0"
