@@ -7,9 +7,8 @@ prog1 = PI.Program(
 	[:x],
 	[:y]
 )
-prog1_inv = PI.invert_prog(prog1)
-x, = prog1_inv([4], [1])
-PI.compile_prog(prog1)([x])
+x, = PI.invert_prog(prog1, [4], [1])
+PI.run_prog(prog1, [x])
 println(PI.y)
 
 #= 
@@ -31,9 +30,8 @@ prog2 = PI.Program(
 	[:x, :y],
 	[:z]
 )
-prog2_inv = PI.invert_prog(prog2)
-x, y = prog2_inv([8], [0, 0, [3, 0], 1])
-PI.compile_prog(prog2)([x, y])
+x, y = PI.invert_prog(prog2, [8], [0, 0, [3, 0], 1])
+PI.run_prog(prog2, [x, y])
 println(PI.z)
 
 # y = (x^2)^2
@@ -46,9 +44,8 @@ prog3 = PI.Program(
 	[:x],
 	[:y]
 )
-prog3_inv = PI.invert_prog(prog3)
-x, = prog3_inv([16], [-1, -1])
-PI.compile_prog(prog3)([x])
+x, = PI.invert_prog(prog3, [16], [-1, -1])
+PI.run_prog(prog3, [x])
 println(PI.y)
 #=
 z = x^2 + 2xy + y^2
@@ -77,9 +74,7 @@ prog4 = PI.Program(
 	[:x, :y],
 	[:z]
 )
-prog4_inv = PI.invert_prog(prog4)
-x, y = prog4_inv([9], [0, 0, 1, 0, [1, 0], 1, 4, 1])
-
-PI.compile_prog(prog4)([x, y])
+x, y = PI.invert_prog(prog4, [9], [0, 0, 1, 0, [1, 0], 1, 4, 1])
+PI.run_prog(prog4, [x, y])
 println(PI.z)
 
