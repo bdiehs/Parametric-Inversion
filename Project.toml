@@ -2,3 +2,9 @@ name = "ParametricInversion"
 uuid = "c55f73b3-3882-43cd-b2f9-a57faea6b11b"
 authors = ["Christian Altamirano <bdiehs@mit.edu>"]
 version = "0.1.0"
+
+[deps]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

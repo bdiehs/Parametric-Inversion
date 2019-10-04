@@ -15,18 +15,17 @@ twice(x) = tuple(2*x[1])
 twice_inv(y, th) = tuple(y[1]/2)
 twice_contr(y) = y
 
-dupl(n) = function(x)
-	tuple([x[1] for i in 1:n]...)
-end
-dupl_inv(n) = function(arr, th)
-	for i in 1:length(arr)
+dupl(n) = x -> tuple([x[1] for i in 1:n]...)
+
+dupl_inv(n) = function(arr...)
+	for i in 1:length(arr)-1
 		if arr[i] != arr[1]
 			error("dupl inverse failed")
 		end
 	end
-	return tuple(arr[1])
+	(arr[1],)
 end
-dupl_contr(n) = function(arr)
+dupl_contr(n) = function(arr...)
 	tuple([arr[1] for i in 1:n]...)
 end
 dupl1 = dupl(1)
