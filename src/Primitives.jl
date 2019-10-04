@@ -3,7 +3,7 @@ known_contractions = Dict()
 
 #invert: (X -> Y) -> (Y * (param_type) -> X)
 invert(f) = known_inversions[f]
-contract(f, args) = known_contractions[f](args)
+contract(f) = known_contractions[f]
 
 plus(x1, x2) = tuple(x1 + x2)
 plus_inv(y, th) = tuple(y[1] - th, th)

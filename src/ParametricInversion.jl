@@ -3,6 +3,7 @@ module ParametricInversion
 export invert_prog, compile_prog
 
 include("Primitives.jl")
+include("Util.jl")
 
 """
 Data structure for a functional expression that represents
@@ -35,24 +36,11 @@ compile(expr::FuncExpr) = Expr(
 	Expr(:call, expr.func, expr.args...)
 )
 
-"""
-Gets the values of the variables in vars from bindings
-"""
-get_many(bindings, vars) = tuple([bindings[var] for var in vars]...)
-
-"""
-Binds values to variables and stores it in bindings
-"""
-function set_many(bindings, vars, vals)
-	for i in 1:length(vars)
-		bindings[vars[i]] = vals[i]
-	end
-end
 
 """
 Compiles a program, assigns input values and runs Julia code
 """
-function run_prog(program::Program, input_vals)
+function compile(program::Program, input_vals)
 	for i in 1:length(program.input_vars)
 		eval(:($(program.input_vars[i]) = $(input_vals[i])))
 	end
@@ -62,25 +50,31 @@ function run_prog(program::Program, input_vals)
 end
 
 """
-Inverts a functional expression using bindings and a parameter 
+Inverts a functional expression. It uses param_gen to generate new symbols for the new parameters
 """
-function invert_and_assign_exp(bindings, expr::FuncExpr, th)
-	contr_vals = contract(expr.func, get_many(bindings, expr.vars))
-	set_many(bindings, expr.vars, contr_vals)
-	arg_vals = invert(expr.func)(contr_vals, th)
-	set_many(bindings, expr.args, arg_vals)
+function invert_exp(param_gen, expr::FuncExpr)
+	contraction = Expr(:(=), Expr(:tuple, expr.vars...), Expr(:call, contract(expr.func), expr.vars...))
+	inversion = Expr(:(=), Expr(:tuple, expr.args...), Expr(:call, invert(expr.func), (expr.vars..., generate(param_gen))))
 end
 
+
 """
-Inverts a program given output values and parameters
+Inverts a program and returns another program
 """
-function invert_prog(program::Program, output_vals, params)
-	bindings = Dict{Symbol, Number}()
-	set_many(bindings, program.output_vars, output_vals)
+function invert_prog(program::Program)
+	param_gen = param_generator()
+	program_inv = Program([], copy(program.output_vars), copy(program.input_vars))
 	for i in length(program.exprs):-1:1
-		invert_and_assign_exp(bindings, program.exprs[i], params[i])
+		expr = program.exprs[i]
+		contraction = FuncExpr(expr.vars, contract(expr.func), expr.vars)
+		new_param = generate(param_gen)
+		println(new_param)
+		push!(program_inv.input_vars, new_param)
+		inversion = FuncExpr(expr.args, invert(expr.func), (expr.vars..., new_param))
+		push!(program_inv.exprs, contraction, inversion)
 	end
-	return [bindings[input_var] for input_var in program.input_vars]
+	return program_inv
 end
+
 
 end
