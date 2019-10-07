@@ -10,13 +10,11 @@ function test1()
 	[:y]
 	)
 	inv_prog1 = PI.invert_prog(prog1)
-	# PI.run_prog(prog1, [x])
-	# println(PI.y)
-	fwd_julia = compile(prog1, :fwd_prog1)
-	inv_julia = compile(inv_prog1, :inv_prog1)
+	fwd_julia = PI.compile(prog1, :fwd_prog1)
+	inv_julia = PI.compile(inv_prog1, :inv_prog1)
 	inp = rand()
-	out, = fwd_julia(inp)
-	inv_out, = inv_julia(out, 1)
+	out, = eval(fwd_julia)(inp)
+	inv_out, = eval(inv_julia)(out, 1)
 	@test out == fwd_julia(inv_out)[1]
 end
 
