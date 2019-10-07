@@ -2,6 +2,9 @@ using ParametricInversion
 const PI = ParametricInversion
 using Test
 
+el(x) = (args...) -> Base.invokelatest(x, args...)
+eval_el(x) = el(eval(x))
+
 # y = x^2
 function test1()
 	prog1 = PI.Program(
@@ -13,10 +16,12 @@ function test1()
 	fwd_julia = PI.compile(prog1, :fwd_prog1)
 	inv_julia = PI.compile(inv_prog1, :inv_prog1)
 	inp = rand()
-	out, = eval(fwd_julia)(inp)
-	inv_out, = eval(inv_julia)(out, 1)
-	@test out == fwd_julia(inv_out)[1]
+	out, = eval_el(fwd_julia)(inp)
+	inv_out, = eval_el(inv_julia)(out, 1)
+	@test out == eval_el(fwd_julia)(inv_out)[1]
 end
+
+test1()
 
 
 # #= 
